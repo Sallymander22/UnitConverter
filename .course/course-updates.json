@@ -26,6 +26,7 @@
 	  "name": "Tag Helpers and Named Handlers",
 	  "tag": "lesson-04-update",
 	  "marker": ".course/applied/lesson-04"
+<<<<<<< HEAD
 	},
 	{
 	  "number": 5,
@@ -38,6 +39,8 @@
 	  "name": "Troubleshooting",
 	  "tag": "lesson-06-update",
 	  "marker": ".course/applied/lesson-06"
+=======
+>>>>>>> fc8e5e3 (Add Lesson 4 tag helpers and named handlers update)
 	}
   ]
 }
