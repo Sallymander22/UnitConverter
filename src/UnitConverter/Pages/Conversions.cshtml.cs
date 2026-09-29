@@ -28,7 +28,7 @@ public class ConversionsModel : PageModel
         get => Conversion.Output;
         set => Conversion.Output = value;
     }
-    
+
     public void OnGet()
     {
         if (string.IsNullOrEmpty(Conversion.ConversionType))

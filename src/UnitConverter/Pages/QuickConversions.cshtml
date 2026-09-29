@@ -1,0 +1,128 @@
+﻿@page
+@model UnitConverter.Pages.QuickConversionsModel
+@{
+    ViewData["Title"] = "Quick Conversions";
+}
+
+<div class="container my-4">
+    <h1>Quick Conversions</h1>
+    <p><a asp-page="/Index" class="btn btn-secondary mb-3">Back to Main Index</a></p>
+
+    <div class="row">
+        <!-- Miles to Kilometers -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Miles to Kilometers</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.MilesToKilometers">
+                    <div class="mb-3">
+                        <label for="milesInput" class="form-label">Miles</label>
+                        <input id="milesInput" name="input" type="text" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Kilometers to Miles -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Kilometers to Miles</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.KilometersToMiles">
+                    <div class="mb-3">
+                        <label for="kmInput" class="form-label">Kilometers</label>
+                        <input id="kmInput" name="input" type="number" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fahrenheit to Celsius -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Fahrenheit to Celsius</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.FahrenheitToCelsius">
+                    <div class="mb-3">
+                        <label for="fahrenheitInput" class="form-label">Fahrenheit</label>
+                        <textarea id="fahrenheitInput" name="input" class="form-control" rows="1"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Celsius to Fahrenheit -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Celsius to Fahrenheit</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.CelsiusToFahrenheit">
+                    <div class="mb-3">
+                        <label for="celsiusInput" class="form-label">Celsius (Range: -40 to 100)</label>
+                        <input id="celsiusInput" name="input" type="range" class="form-range" min="-40" max="100" step="1" value="0" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pounds to Kilograms -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Pounds to Kilograms</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.PoundsToKilograms">
+                    <div class="mb-3">
+                        <label for="poundsSelect" class="form-label">Pounds</label>
+                        <select id="poundsSelect" name="input" class="form-select" asp-items="Model.PoundOptions"></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Kilograms to Pounds -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Kilograms to Pounds</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.KilogramsToPounds">
+                    <div class="mb-3">
+                        <label for="kgInput" class="form-label">Kilograms</label>
+                        <input id="kgInput" name="input" type="number" step="any" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Inches to Centimeters -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Inches to Centimeters</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.InchesToCentimeters">
+                    <div class="mb-3">
+                        <label for="inchesInput" class="form-label">Inches</label>
+                        <input id="inchesInput" name="input" type="number" step="any" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Centimeters to Inches -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Centimeters to Inches</h5>
+                <form method="get" asp-page-handler="@ConversionTypes.CentimetersToInches">
+                    <div class="mb-3">
+                        <label for="cmToInchesInput" class="form-label">Centimeters</label>
+                        <input id="cmToInchesInput" name="input" type="number" step="any" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
