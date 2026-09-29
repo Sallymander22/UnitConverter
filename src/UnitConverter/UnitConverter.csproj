@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="UnitOf" Version="1.0.0"/>
+        <PackageReference Include="UnitOf" Version="1.0.0" />
+        <PackageReference Include="UnitsNet" Version="5.75.1" />
     </ItemGroup>
 </Project>
