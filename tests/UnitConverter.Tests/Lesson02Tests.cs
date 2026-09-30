@@ -3,8 +3,8 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace UnitConverter.Tests;
 
@@ -124,7 +124,7 @@ public class Lesson02Tests
     [Fact]
     public async Task ConversionRoute_ReturnsSuccessStatusCode()
     {
-        await using WebApplicationFactory<Program> application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
         using HttpClient client = application.CreateClient();
 
@@ -137,7 +137,7 @@ public class Lesson02Tests
     [Fact]
     public async Task ConversionRoute_DisplaysConversionInformation()
     {
-        await using WebApplicationFactory<Program> application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
         using HttpClient client = application.CreateClient();
 
@@ -213,9 +213,9 @@ public class Lesson02Tests
         MethodInfo? method = model.GetType().GetMethod(
             "OnGet",
             BindingFlags.Public | BindingFlags.Instance,
-            binder: null,
-            types: Type.EmptyTypes,
-            modifiers: null);
+            null,
+            Type.EmptyTypes,
+            null);
 
         Assert.NotNull(method);
 

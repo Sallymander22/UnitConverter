@@ -1,5 +1,6 @@
 ﻿@page
-@model UnitConverter.Pages.QuickConversionsModel
+@using UnitConverter.Models
+@model QuickConversionsModel
 @{
     ViewData["Title"] = "Quick Conversions";
 }
@@ -16,7 +17,7 @@
                 <form method="get" asp-page-handler="@ConversionTypes.MilesToKilometers">
                     <div class="mb-3">
                         <label for="milesInput" class="form-label">Miles</label>
-                        <input id="milesInput" name="input" type="text" class="form-control" />
+                        <input id="milesInput" name="input" type="text" class="form-control"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -30,7 +31,7 @@
                 <form method="get" asp-page-handler="@ConversionTypes.KilometersToMiles">
                     <div class="mb-3">
                         <label for="kmInput" class="form-label">Kilometers</label>
-                        <input id="kmInput" name="input" type="number" class="form-control" />
+                        <input id="kmInput" name="input" type="number" class="form-control"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -60,7 +61,8 @@
                 <form method="get" asp-page-handler="@ConversionTypes.CelsiusToFahrenheit">
                     <div class="mb-3">
                         <label for="celsiusInput" class="form-label">Celsius (Range: -40 to 100)</label>
-                        <input id="celsiusInput" name="input" type="range" class="form-range" min="-40" max="100" step="1" value="0" />
+                        <input id="celsiusInput" name="input" type="range" class="form-range" min="-40" max="100"
+                               step="1" value="0"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -74,7 +76,8 @@
                 <form method="get" asp-page-handler="@ConversionTypes.PoundsToKilograms">
                     <div class="mb-3">
                         <label for="poundsSelect" class="form-label">Pounds</label>
-                        <select id="poundsSelect" name="input" class="form-select" asp-items="Model.PoundOptions"></select>
+                        <select id="poundsSelect" name="input" class="form-select"
+                                asp-items="Model.PoundOptions"></select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -88,7 +91,7 @@
                 <form method="get" asp-page-handler="@ConversionTypes.KilogramsToPounds">
                     <div class="mb-3">
                         <label for="kgInput" class="form-label">Kilograms</label>
-                        <input id="kgInput" name="input" type="number" step="any" class="form-control" />
+                        <input id="kgInput" name="input" type="number" step="any" class="form-control"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -104,7 +107,7 @@
                 <form method="get" asp-page-handler="@ConversionTypes.InchesToCentimeters">
                     <div class="mb-3">
                         <label for="inchesInput" class="form-label">Inches</label>
-                        <input id="inchesInput" name="input" type="number" step="any" class="form-control" />
+                        <input id="inchesInput" name="input" type="number" step="any" class="form-control"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>
@@ -118,7 +121,7 @@
                 <form method="get" asp-page-handler="@ConversionTypes.CentimetersToInches">
                     <div class="mb-3">
                         <label for="cmToInchesInput" class="form-label">Centimeters</label>
-                        <input id="cmToInchesInput" name="input" type="number" step="any" class="form-control" />
+                        <input id="cmToInchesInput" name="input" type="number" step="any" class="form-control"/>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>

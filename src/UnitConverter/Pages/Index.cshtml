@@ -1,4 +1,5 @@
 ﻿@page
+@using UnitConverter.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -21,7 +22,7 @@
 
         <div class="mb-3">
             <label for="input" class="form-label">Value to Convert:</label>
-            <input id="input" name="Conversion.Input" type="text" class="form-control" placeholder="e.g. 10" />
+            <input id="input" name="Conversion.Input" type="text" class="form-control" placeholder="e.g. 10"/>
         </div>
 
         <button type="submit" class="btn btn-primary">Convert</button>

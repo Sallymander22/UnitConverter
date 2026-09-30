@@ -9,7 +9,7 @@ public class Lesson03Tests
     [Fact]
     public void ConversionModel_HasRequiredStringProperties()
     {
-        var modelType = FindType("ConversionModel");
+        Type? modelType = FindType("ConversionModel");
 
         Assert.NotNull(modelType);
 
@@ -21,13 +21,13 @@ public class Lesson03Tests
     [Fact]
     public void ConversionsPageModel_UsesConversionModel()
     {
-        var conversionModelType = FindType("ConversionModel");
+        Type? conversionModelType = FindType("ConversionModel");
 
         Assert.NotNull(conversionModelType);
 
-        var pageModelType = Lesson02Tests.GetConversionsPageModelType();
+        Type pageModelType = Lesson02Tests.GetConversionsPageModelType();
 
-        var property = pageModelType
+        PropertyInfo? property = pageModelType
             .GetProperties()
             .SingleOrDefault(p =>
                 p.PropertyType == conversionModelType);
@@ -38,20 +38,20 @@ public class Lesson03Tests
     [Fact]
     public void ConversionModel_SupportsGetBinding()
     {
-        var conversionModelType = FindType("ConversionModel");
+        Type? conversionModelType = FindType("ConversionModel");
 
         Assert.NotNull(conversionModelType);
 
-        var pageModelType = Lesson02Tests.GetConversionsPageModelType();
+        Type pageModelType = Lesson02Tests.GetConversionsPageModelType();
 
-        var property = pageModelType
+        PropertyInfo? property = pageModelType
             .GetProperties()
             .SingleOrDefault(p =>
                 p.PropertyType == conversionModelType);
 
         Assert.NotNull(property);
 
-        var attribute =
+        BindPropertyAttribute? attribute =
             property.GetCustomAttribute<BindPropertyAttribute>();
 
         Assert.NotNull(attribute);
@@ -61,11 +61,11 @@ public class Lesson03Tests
     [Fact]
     public void ConversionTypes_DefinesRequiredConversions()
     {
-        var type = FindType("ConversionTypes");
+        Type? type = FindType("ConversionTypes");
 
         Assert.NotNull(type);
 
-        var values = type.GetFields(
+        HashSet<string?> values = type.GetFields(
                 BindingFlags.Public |
                 BindingFlags.Static)
             .Where(field => field.FieldType == typeof(string))
@@ -84,11 +84,11 @@ public class Lesson03Tests
     [Fact]
     public void ConversionTypes_ProvidesReadableDisplayNames()
     {
-        var type = FindType("ConversionTypes");
+        Type? type = FindType("ConversionTypes");
 
         Assert.NotNull(type);
 
-        var dictionary = GetConversionDictionary(type);
+        IReadOnlyDictionary<string, string>? dictionary = GetConversionDictionary(type);
 
         Assert.NotNull(dictionary);
 
@@ -103,15 +103,15 @@ public class Lesson03Tests
     [Fact]
     public async Task IndexPage_ContainsConversionForm()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("<form", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("method=\"get\"", content, StringComparison.OrdinalIgnoreCase);
@@ -125,15 +125,15 @@ public class Lesson03Tests
     [Fact]
     public async Task IndexPage_UsesRequiredBootstrapFormClasses()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("form-select", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("form-control", content, StringComparison.OrdinalIgnoreCase);
@@ -149,15 +149,15 @@ public class Lesson03Tests
     [InlineData("Kilograms to Pounds")]
     public async Task IndexPage_DisplaysRequiredConversion(string conversion)
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains(conversion, content, StringComparison.OrdinalIgnoreCase);
     }
@@ -165,18 +165,18 @@ public class Lesson03Tests
     [Fact]
     public async Task QueryStringConversion_ReturnsSuccessfulResult()
     {
-        await using var application =
-            new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/Conversions?" +
-            "Conversion.ConversionType=MilesToKilometers&" +
-            "Conversion.Input=10", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/Conversions?" +
+                                                             "Conversion.ConversionType=MilesToKilometers&" +
+                                                             "Conversion.Input=10",
+            TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content =
+        string content =
             await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("16.09", content);
@@ -185,15 +185,16 @@ public class Lesson03Tests
     [Fact]
     public async Task PreviousRouteStyle_StillWorks()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/Conversions/MilesToKilometers/10", TestContext.Current.CancellationToken);
+        HttpResponseMessage response =
+            await client.GetAsync("/Conversions/MilesToKilometers/10", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("16.09", content);
     }
@@ -201,17 +202,18 @@ public class Lesson03Tests
     [Fact]
     public async Task ConversionsPage_HasReturnLink()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/Conversions?" +
-                                             "Conversion.ConversionType=MilesToKilometers&" +
-                                             "Conversion.Input=10", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/Conversions?" +
+                                                             "Conversion.ConversionType=MilesToKilometers&" +
+                                                             "Conversion.Input=10",
+            TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("href=\"/\"", content, StringComparison.OrdinalIgnoreCase);
     }
@@ -224,7 +226,7 @@ public class Lesson03Tests
     private static IReadOnlyDictionary<string, string>? GetConversionDictionary(Type conversionTypesType)
     {
         // Look for a public static property first.
-        var property = conversionTypesType
+        PropertyInfo? property = conversionTypesType
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .FirstOrDefault(p =>
                 typeof(IReadOnlyDictionary<string, string>)
@@ -236,7 +238,7 @@ public class Lesson03Tests
         }
 
         // Also allow a public static field.
-        var field = conversionTypesType
+        FieldInfo? field = conversionTypesType
             .GetFields(BindingFlags.Public | BindingFlags.Static)
             .FirstOrDefault(f =>
                 typeof(IReadOnlyDictionary<string, string>)
@@ -255,7 +257,7 @@ public class Lesson03Tests
         string key,
         string displayName)
     {
-        var actual = dictionary
+        KeyValuePair<string, string> actual = dictionary
             .FirstOrDefault(entry =>
                 string.Equals(entry.Key, key, StringComparison.OrdinalIgnoreCase));
 
@@ -275,7 +277,7 @@ public class Lesson03Tests
 
     private static void AssertStringProperty(Type type, string propertyName)
     {
-        var property = type.GetProperty(propertyName);
+        PropertyInfo? property = type.GetProperty(propertyName);
 
         Assert.NotNull(property);
         Assert.Equal(typeof(string), property.PropertyType);

@@ -7,11 +7,11 @@ public class ApplicationTests
     [Fact]
     public async Task HomePage_ReturnsSuccessStatusCode()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
     }
@@ -19,12 +19,12 @@ public class ApplicationTests
     [Fact]
     public async Task HomePage_ContainsExpectedHeading()
     {
-        await using var application = new WebApplicationFactory<Program>();
+        await using WebApplicationFactory<Program> application = new();
 
-        using var client = application.CreateClient();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
-        String content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("Unit Converter", content);
     }

@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using UnitConverter.Models;
+using UnitOf;
 
 namespace UnitConverter.Pages;
 
 public class ConversionsModel : PageModel
 {
-    [BindProperty(SupportsGet = true)] public ConversionModel Conversion { get; set; } = new ConversionModel();
+    [BindProperty(SupportsGet = true)] public ConversionModel Conversion { get; set; } = new();
 
     [BindProperty(SupportsGet = true)]
     public string ConversionType
@@ -45,7 +45,7 @@ public class ConversionsModel : PageModel
 
         // Fixes the multi-line lookup error
         ViewData["ConversionType"] =
-            ConversionTypes.SupportedTypes.TryGetValue(Conversion.ConversionType, out var displayName)
+            ConversionTypes.SupportedTypes.TryGetValue(Conversion.ConversionType, out string? displayName)
                 ? displayName
                 : Conversion.ConversionType;
 
@@ -64,20 +64,20 @@ public class ConversionsModel : PageModel
         // Fixes the switch statement mapping issues
         Conversion.Output = Conversion.ConversionType switch
         {
-            ConversionTypes.MilesToKilometers => new UnitOf.Length().FromMiles(parsedInput).ToKilometers().ToString(),
-            ConversionTypes.KilometersToMiles => new UnitOf.Length().FromKilometers(parsedInput).ToMiles().ToString(),
+            ConversionTypes.MilesToKilometers => new Length().FromMiles(parsedInput).ToKilometers().ToString(),
+            ConversionTypes.KilometersToMiles => new Length().FromKilometers(parsedInput).ToMiles().ToString(),
 
-            ConversionTypes.FahrenheitToCelsius => new UnitOf.Temperature().FromFahrenheit(parsedInput).ToCelsius()
+            ConversionTypes.FahrenheitToCelsius => new Temperature().FromFahrenheit(parsedInput).ToCelsius()
                 .ToString(),
-            ConversionTypes.CelsiusToFahrenheit => new UnitOf.Temperature().FromCelsius(parsedInput).ToFahrenheit()
+            ConversionTypes.CelsiusToFahrenheit => new Temperature().FromCelsius(parsedInput).ToFahrenheit()
                 .ToString(),
 
-            ConversionTypes.PoundsToKilograms => new UnitOf.Mass().FromPounds(parsedInput).ToKilograms().ToString(),
-            ConversionTypes.KilogramsToPounds => new UnitOf.Mass().FromKilograms(parsedInput).ToPounds().ToString(),
+            ConversionTypes.PoundsToKilograms => new Mass().FromPounds(parsedInput).ToKilograms().ToString(),
+            ConversionTypes.KilogramsToPounds => new Mass().FromKilograms(parsedInput).ToPounds().ToString(),
 
-            ConversionTypes.InchesToCentimeters => new UnitOf.Length().FromInches(parsedInput).ToCentimeters()
+            ConversionTypes.InchesToCentimeters => new Length().FromInches(parsedInput).ToCentimeters()
                 .ToString(),
-            ConversionTypes.CentimetersToInches => new UnitOf.Length().FromCentimeters(parsedInput).ToInches()
+            ConversionTypes.CentimetersToInches => new Length().FromCentimeters(parsedInput).ToInches()
                 .ToString(),
 
             _ => string.Empty

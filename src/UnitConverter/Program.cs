@@ -1,9 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -21,14 +21,17 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapRazorPages()
-   .WithStaticAssets();
+    .WithStaticAssets();
 
 app.Run();
 
 
-/// <summary>
-/// This is provided to support the WebApplicationFactory used in testing.
-/// </summary>
-public partial class Program
+namespace UnitConverter
 {
+    /// <summary>
+    ///     This is provided to support the WebApplicationFactory used in testing.
+    /// </summary>
+    public class Program
+    {
+    }
 }

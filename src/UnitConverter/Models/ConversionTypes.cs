@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace UnitConverter;
+﻿namespace UnitConverter.Models;
 
 public static class ConversionTypes
 {
@@ -13,7 +11,7 @@ public static class ConversionTypes
     public const string InchesToCentimeters = "InchesToCentimeters";
     public const string CentimetersToInches = "CentimetersToInches";
 
-    public static readonly Dictionary<string, string> SupportedTypes = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> SupportedTypes = new()
     {
         { MilesToKilometers, "Miles to Kilometers" },
         { KilometersToMiles, "Kilometers to Miles" },
@@ -23,6 +21,5 @@ public static class ConversionTypes
         { KilogramsToPounds, "Kilograms to Pounds" },
         { InchesToCentimeters, "Inches to Centimeters" },
         { CentimetersToInches, "Centimeters to Inches" }
-
     };
 }

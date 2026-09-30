@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 namespace UnitConverter.Tests;
 
 /// <summary>
-/// Acceptance tests for Lesson 1: First Razor Page.
-/// These tests use reflection where appropriate so that the test project
-/// still compiles before the student creates ConversionsModel.
+///     Acceptance tests for Lesson 1: First Razor Page.
+///     These tests use reflection where appropriate so that the test project
+///     still compiles before the student creates ConversionsModel.
 /// </summary>
 public class Lesson01Tests
 {
@@ -23,10 +23,10 @@ public class Lesson01Tests
     [Fact]
     public async Task ConversionsPage_ReturnsSuccessStatusCode()
     {
-        await using var application = new WebApplicationFactory<Program>();
-        using var client = application.CreateClient();
+        await using WebApplicationFactory<Program> application = new();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/Conversions", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/Conversions", TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
     }
@@ -34,13 +34,13 @@ public class Lesson01Tests
     [Fact]
     public async Task ConversionsPage_DisplaysRequiredContent()
     {
-        await using var application = new WebApplicationFactory<Program>();
-        using var client = application.CreateClient();
+        await using WebApplicationFactory<Program> application = new();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/Conversions", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/Conversions", TestContext.Current.CancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains(RequiredConversionType, content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains(RequiredInput, content, StringComparison.Ordinal);
@@ -49,13 +49,13 @@ public class Lesson01Tests
     [Fact]
     public async Task Navigation_ContainsConversionsLink()
     {
-        await using var application = new WebApplicationFactory<Program>();
-        using var client = application.CreateClient();
+        await using WebApplicationFactory<Program> application = new();
+        using HttpClient client = application.CreateClient();
 
-        var response = await client.GetAsync("/", TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await client.GetAsync("/", TestContext.Current.CancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        string content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         Assert.Contains("href=\"/Conversions\"", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains(">Conversions<", content, StringComparison.OrdinalIgnoreCase);
@@ -64,10 +64,10 @@ public class Lesson01Tests
     [Fact]
     public void ConversionsPageModel_ContainsRequiredProperties()
     {
-        var modelType = GetConversionsModelType();
+        Type modelType = GetConversionsModelType();
 
-        var inputProperty = modelType.GetProperty("Input", BindingFlags.Public | BindingFlags.Instance);
-        var outputProperty = modelType.GetProperty("Output", BindingFlags.Public | BindingFlags.Instance);
+        PropertyInfo? inputProperty = modelType.GetProperty("Input", BindingFlags.Public | BindingFlags.Instance);
+        PropertyInfo? outputProperty = modelType.GetProperty("Output", BindingFlags.Public | BindingFlags.Instance);
 
         Assert.NotNull(inputProperty);
         Assert.Equal(typeof(string), inputProperty.PropertyType);
@@ -79,10 +79,10 @@ public class Lesson01Tests
     [Fact]
     public void OnGet_SetsRequiredInputAndViewData()
     {
-        var (model, modelType) = CreateAndRunPageModel();
+        (PageModel model, Type modelType) = CreateAndRunPageModel();
 
-        var inputProperty = GetRequiredProperty(modelType, "Input");
-        var input = Assert.IsType<string>(inputProperty.GetValue(model));
+        PropertyInfo inputProperty = GetRequiredProperty(modelType, "Input");
+        string input = Assert.IsType<string>(inputProperty.GetValue(model));
 
         Assert.Equal(RequiredInput, input);
         Assert.Equal(RequiredConversionType, model.ViewData["ConversionType"]);
@@ -92,13 +92,13 @@ public class Lesson01Tests
     [Fact]
     public void OnGet_ProducesCorrectMilesToKilometersOutput()
     {
-        var (model, modelType) = CreateAndRunPageModel();
+        (PageModel model, Type modelType) = CreateAndRunPageModel();
 
-        var outputProperty = GetRequiredProperty(modelType, "Output");
-        var output = Assert.IsType<string>(outputProperty.GetValue(model));
+        PropertyInfo outputProperty = GetRequiredProperty(modelType, "Output");
+        string output = Assert.IsType<string>(outputProperty.GetValue(model));
 
         Assert.True(
-            TryParseDouble(output, out var actualKilometers),
+            TryParseDouble(output, out double actualKilometers),
             $"Output must contain a numeric value, but was '{output}'.");
 
         Assert.InRange(
@@ -109,7 +109,7 @@ public class Lesson01Tests
 
     private static Type GetConversionsModelType()
     {
-        var modelType = typeof(Program).Assembly
+        Type? modelType = typeof(Program).Assembly
             .GetTypes()
             .SingleOrDefault(type =>
                 type.Name == "ConversionsModel" &&
@@ -121,10 +121,10 @@ public class Lesson01Tests
 
     private static (PageModel Model, Type ModelType) CreateAndRunPageModel()
     {
-        var modelType = GetConversionsModelType();
-        var instance = Activator.CreateInstance(modelType);
+        Type modelType = GetConversionsModelType();
+        object? instance = Activator.CreateInstance(modelType);
 
-        var model = Assert.IsAssignableFrom<PageModel>(instance);
+        PageModel model = Assert.IsAssignableFrom<PageModel>(instance);
 
         model.PageContext = new PageContext
         {
@@ -133,12 +133,12 @@ public class Lesson01Tests
                 new ModelStateDictionary())
         };
 
-        var onGet = modelType.GetMethod(
+        MethodInfo? onGet = modelType.GetMethod(
             "OnGet",
             BindingFlags.Public | BindingFlags.Instance,
-            binder: null,
-            types: Type.EmptyTypes,
-            modifiers: null);
+            null,
+            Type.EmptyTypes,
+            null);
 
         Assert.NotNull(onGet);
 
@@ -156,7 +156,7 @@ public class Lesson01Tests
 
     private static PropertyInfo GetRequiredProperty(Type modelType, string propertyName)
     {
-        var property = modelType.GetProperty(
+        PropertyInfo? property = modelType.GetProperty(
             propertyName,
             BindingFlags.Public | BindingFlags.Instance);
 
