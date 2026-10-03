@@ -9,6 +9,14 @@
     <h1>Quick Conversions</h1>
     <p><a asp-page="/Index" class="btn btn-secondary mb-3">Back to Main Index</a></p>
 
+    <!-- ⬇️ Conversion result is rendered here so tests can read it ⬇️ -->
+    @if (!string.IsNullOrEmpty(Model.Result))
+    {
+        <div class="alert alert-success my-3 text-center">
+            <h4>Conversion Result: <strong>@Model.Result</strong></h4>
+        </div>
+    }
+
     <div class="row">
         <!-- Miles to Kilometers -->
         <div class="col-md-4 mb-4">
