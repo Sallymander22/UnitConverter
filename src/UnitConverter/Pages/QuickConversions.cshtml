@@ -1,6 +1,7 @@
 ﻿@page
 @using UnitConverter.Models
-@model QuickConversionsModel
+@model UnitConverter.Pages.QuickConversionsModel
+
 @{
     ViewData["Title"] = "Quick Conversions";
 }
@@ -9,7 +10,13 @@
     <h1>Quick Conversions</h1>
     <p><a asp-page="/Index" class="btn btn-secondary mb-3">Back to Main Index</a></p>
 
-    <!-- ⬇️ Conversion result is rendered here so tests can read it ⬇️ -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div role="alert" class="alert alert-danger my-3 text-center">
+            <h4>Invalid Input Provided. Please check your inputs.</h4>
+        </div>
+    }
+
     @if (!string.IsNullOrEmpty(Model.Result))
     {
         <div class="alert alert-success my-3 text-center">
@@ -85,7 +92,7 @@
                     <div class="mb-3">
                         <label for="poundsSelect" class="form-label">Pounds</label>
                         <select id="poundsSelect" name="input" class="form-select"
-                                asp-items="Model.PoundOptions"></select>
+                                asp-items="new SelectList(Model.PoundOptions)"></select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Convert</button>
                 </form>

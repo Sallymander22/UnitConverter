@@ -18,10 +18,11 @@
         <div class="mb-3">
             <label for="ConversionType" class="form-label">Select Conversion Type:</label>
             <select id="ConversionType" name="Conversion.ConversionType" class="form-select">
-                @foreach (var conversion in ConversionTypes.SupportedTypes)
+                @foreach (var conversion in UnitConverter.Models.ConversionTypes.All)
                 {
-                    <option value=@(conversion.Key)>@conversion.Value</option>
+                    <option value="@conversion.Key">@conversion.Value</option>
                 }
+
             </select>
         </div>
 

@@ -7,33 +7,46 @@ namespace UnitConverter.Pages;
 
 public class ConversionsModel : PageModel
 {
-    [BindProperty(SupportsGet = true)] public ConversionModel Conversion { get; set; } = new();
+    [BindProperty(SupportsGet = true)]
+    public ConversionModel Conversion { get; set; } = new();
 
     [BindProperty(SupportsGet = true)]
-    public string ConversionType
+    public string? Input
     {
-        get => Conversion.ConversionType;
-        set => Conversion.ConversionType = value;
+        get => Conversion?.Input;
+        set { if (Conversion != null) Conversion.Input = value; }
+    }
+
+    public string? Output
+    {
+        get => Conversion?.Output;
+        set { if (Conversion != null) Conversion.Output = value; }
     }
 
     [BindProperty(SupportsGet = true)]
-    public string Input
+    public string? ConversionType
     {
-        get => Conversion.Input;
-        set => Conversion.Input = value;
+        get => Conversion?.ConversionType;
+        set { if (Conversion != null) Conversion.ConversionType = value; }
     }
 
-    public string Output
+    public double? Value
     {
-        get => Conversion.Output;
-        set => Conversion.Output = value;
+        get => double.TryParse(Conversion?.Input, out var parsed) ? parsed : null;
+        set { if (Conversion != null) Conversion.Input = value?.ToString() ?? string.Empty; }
+    }
+
+    public double? ConvertedValue
+    {
+        get => double.TryParse(Conversion?.Output, out var parsed) ? parsed : null;
+        set { if (Conversion != null) Conversion.Output = value?.ToString() ?? string.Empty; }
     }
 
     public void OnGet()
     {
         if (string.IsNullOrEmpty(Conversion.ConversionType))
         {
-            Conversion.ConversionType = ConversionTypes.MilesToKilometers;
+            Conversion.ConversionType = "MilesToKilometers";
         }
 
         if (string.IsNullOrEmpty(Conversion.Input))
@@ -43,9 +56,8 @@ public class ConversionsModel : PageModel
 
         ViewData["Title"] = "Conversions";
 
-        // Fixes the multi-line lookup error
         ViewData["ConversionType"] =
-            ConversionTypes.SupportedTypes.TryGetValue(Conversion.ConversionType, out string? displayName)
+            ConversionTypes.All.TryGetValue(Conversion.ConversionType, out string? displayName)
                 ? displayName
                 : Conversion.ConversionType;
 
@@ -61,24 +73,19 @@ public class ConversionsModel : PageModel
             return;
         }
 
-        // Fixes the switch statement mapping issues
         Conversion.Output = Conversion.ConversionType switch
         {
-            ConversionTypes.MilesToKilometers => new Length().FromMiles(parsedInput).ToKilometers().ToString(),
-            ConversionTypes.KilometersToMiles => new Length().FromKilometers(parsedInput).ToMiles().ToString(),
+            "MilesToKilometers" => new Length().FromMiles(parsedInput).ToKilometers().ToString(),
+            "KilometersToMiles" => new Length().FromKilometers(parsedInput).ToMiles().ToString(),
 
-            ConversionTypes.FahrenheitToCelsius => new Temperature().FromFahrenheit(parsedInput).ToCelsius()
-                .ToString(),
-            ConversionTypes.CelsiusToFahrenheit => new Temperature().FromCelsius(parsedInput).ToFahrenheit()
-                .ToString(),
+            "FahrenheitToCelsius" => new Temperature().FromFahrenheit(parsedInput).ToCelsius().ToString(),
+            "CelsiusToFahrenheit" => new Temperature().FromCelsius(parsedInput).ToFahrenheit().ToString(),
 
-            ConversionTypes.PoundsToKilograms => new Mass().FromPounds(parsedInput).ToKilograms().ToString(),
-            ConversionTypes.KilogramsToPounds => new Mass().FromKilograms(parsedInput).ToPounds().ToString(),
+            "PoundsToKilograms" => new Mass().FromPounds(parsedInput).ToKilograms().ToString(),
+            "KilogramsToPounds" => new Mass().FromKilograms(parsedInput).ToPounds().ToString(),
 
-            ConversionTypes.InchesToCentimeters => new Length().FromInches(parsedInput).ToCentimeters()
-                .ToString(),
-            ConversionTypes.CentimetersToInches => new Length().FromCentimeters(parsedInput).ToInches()
-                .ToString(),
+            "InchesToCentimeters" => new Length().FromInches(parsedInput).ToCentimeters().ToString(),
+            "CentimetersToInches" => new Length().FromCentimeters(parsedInput).ToInches().ToString(),
 
             _ => string.Empty
         };
