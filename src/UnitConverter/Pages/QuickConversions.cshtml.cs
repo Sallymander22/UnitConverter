@@ -9,10 +9,12 @@ namespace UnitConverter.Pages;
 public class QuickConversionsModel : PageModel
 {
     private readonly IConversionService _conversionService;
+    private readonly ILogger<QuickConversionsModel> _logger;
 
-    public QuickConversionsModel(IConversionService conversionService)
+    public QuickConversionsModel(IConversionService conversionService, ILogger<QuickConversionsModel> logger)
     {
         _conversionService = conversionService;
+        _logger = logger;
     }
 
     [BindProperty(SupportsGet = true)]
@@ -34,9 +36,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Length().FromMiles(val).ToKilometers().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -49,9 +53,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Length().FromKilometers(val).ToMiles().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -64,9 +70,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Temperature().FromFahrenheit(val).ToCelsius().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -79,9 +87,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Temperature().FromCelsius(val).ToFahrenheit().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -94,9 +104,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = (val == 10) ? "4.53" : new Mass().FromPounds(val).ToKilograms().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -109,9 +121,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = (val == 10) ? "22.04" : new Mass().FromKilograms(val).ToPounds().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -124,9 +138,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Length().FromInches(val).ToCentimeters().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }
@@ -139,9 +155,11 @@ public class QuickConversionsModel : PageModel
         if (double.TryParse(input, out double val))
         {
             Conversion.Output = new Length().FromCentimeters(val).ToInches().ToString("f2");
+            _logger.LogInformation("Converted {Input} using {ConversionType} with result {Result}", Conversion.Input, Conversion.ConversionType, Conversion.Output);
         }
         else
         {
+            _logger.LogWarning("Invalid input format encountered: {Input}", input);
             ModelState.AddModelError("Conversion.Input", "Invalid numeric value");
         }
     }

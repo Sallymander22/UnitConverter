@@ -1,29 +1,60 @@
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using Serilog.Formatting.Compact;
 
-builder.Services.AddRazorPages();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-builder.Services.AddSingleton<UnitConverter.Services.IConversionService, UnitConverter.Services.UnitOfConversionService>();
-
-
-WebApplication app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
+try
 {
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
+    Log.Information("Starting web application host...");
+
+    WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+    string logPath = Path.Combine(
+        builder.Environment.ContentRootPath,
+        "Logs",
+        "unitconverter-.json");
+
+    builder.Host.UseSerilog((context, configuration) => configuration
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File(
+            new RenderedCompactJsonFormatter(),
+            logPath,
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 7,
+            shared: true));
+
+    builder.Services.AddRazorPages();
+
+    builder.Services.AddSingleton<UnitConverter.Services.IConversionService, UnitConverter.Services.UnitOfConversionService>();
+    builder.Services.AddSingleton<UnitConverter.Services.ILogReader, UnitConverter.Services.JsonLogReader>();
+
+    WebApplication app = builder.Build();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.UseAuthorization();
+    app.UseStaticFiles();
+    app.MapRazorPages();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.UseStaticFiles();
-app.MapRazorPages();
-
-app.Run();
-
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly during lifecycle processing");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 namespace UnitConverter
 {

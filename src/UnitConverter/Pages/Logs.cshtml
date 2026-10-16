@@ -1,0 +1,83 @@
+﻿@page
+@model UnitConverter.Pages.LogsModel
+@using UnitConverter.Models
+@{
+    ViewData["Title"] = "Diagnostic Logs";
+}
+
+<h1>Diagnosstic Logs</h1>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col md-4">
+        <label asp-for="Search" class="form-label">Search</label>
+        <input asp-for="Search" class="form-control" placeholder="Search message text...">
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Level" class="form-label">Level</label>
+        <select asp-for="ConversionType" class="form-select">
+            <option value="">All</option>
+            <option value="Information">Information</option>
+            <option value="Warning">Warning</option>
+            <option value="Error">Error</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="ConversionType" class="form-label">Conversion</label>
+        <select asp-for="ConversionType" class="form-select">
+            <option value="">All</option>
+            @foreach (var type in ConversionTypes.All)
+            {
+                <option value="@type.Key">@type.Value</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+        <a href="/Logs" class="btn btn-secodary w-100">Clear</a>
+    </div>
+</form>
+
+@if (!Model.Entries.Any())
+{
+    <div class="alert alert-info" role="alert">
+        No log entries match the selected filters.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Level</th>
+            <th scope="col">Message</th>
+            <th scope="col">Conversion</th>
+            <th scope="col">Input</th>
+            <th scope="col">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var entry in Model.Entries)
+        {
+            <tr>
+                <td>@entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>
+                    <span class="badge @(entry.Level == "Error" ? "bg-danger" : entry.Level == "Warning" ? "bg-warning text-dark" : "bg-info text-dark")">
+                        @entry.Level
+                    </span>
+                </td>
+                <td>
+                    @entry.Message
+                    @if (!string.IsNullOrEmpty(entry.Exception))
+                    {
+                        <pre class="text-danger small mt-1">@entry.Exception</pre>
+                    }
+                </td>
+                <td>@entry.ConversionType</td>
+                <td>@entry.Input</td>
+                <td>@entry.Result</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
