@@ -22,7 +22,7 @@ public class QuickConversionsModel : PageModel
 
     public List<string> PoundOptions { get; set; } = new() { "10", "20", "30" };
 
-    public string Result => Conversion.Output;
+    public string? Result => Conversion?.Output;
 
     public void OnGet()
     {
